@@ -2,7 +2,7 @@
 
 Gramex can connect to multiple data sources, merge data, create a single dataset, and render it visually.
 
-This demo is an example of how it does it.
+This demo is an example of how it does it. You can try it on the [Gramex IDE](https://gramex.gramener.com/).
 
 ## We have two purchase databases
 
@@ -10,7 +10,7 @@ This demo is an example of how it does it.
 
    [![system1 order table](assets/system1-order.png)](system1)
 
-2. [`system1.db`](system1.db) has a `purchase` table with 14 columns.
+2. [`system2.db`](system2.db) has a `purchase` table with 14 columns.
 
    [![system2 purchase table](assets/system2-purchase.png)](system2)
 
@@ -26,7 +26,7 @@ Both databases have purchase data from a system such as SAP. But the structures 
 
 We want to merge these into a single table that merges relevant columns, transforming them slightly different structure.
 
-## Create a mapping
+## Gramex supports mappings to merge data
 
 The mapping is a table that you can save in a database or a file. Here is an example:
 
@@ -55,10 +55,15 @@ The [result](result) looks like this:
 
 [![Merged result](assets/result.png)](result)
 
-## This can be scheduled or triggered
+## Mappings can be scheduled or triggered
 
 Using [Gramex schedulers](https://learn.gramener.com/guide/scheduler/), this process can be run at specific times or based on triggers.
 
 You can also manually trigger it. Change the [mapping](mapping) and click "Merge" below to refresh the data.
 
+<!-- markdownlint-disable MD033 -->
 <a href="merge" class="btn btn-large btn-primary">Merge</a>
+
+This is the underlying approach used in the [Gramex Purchase app](https://gramener.com/purchase/), which merged data across multiple plants' purchase data.
+
+[![Purchase demo](assets/purchase.png)](https://gramener.com/purchase/)
