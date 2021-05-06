@@ -11,7 +11,8 @@ url:
     pattern: /$YAMLURL/result
     handler: FormHandler
     kwargs:
-      url: $YAMLPATH/result.csv
+      url: sqlite:///$YAMLPATH/result.db
+      table: purchase
       default: { _limit: 100, _format: html }
 
   connector-mapping:

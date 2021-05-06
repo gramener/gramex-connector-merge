@@ -1,18 +1,19 @@
 import gramex.cache
 import gramex.data
 import pandas as pd
+import sqlalchemy as sa
 
 
 def merge(configpath):
-    config = gramex.cache.open(configpath)
+    conf = gramex.cache.open(configpath)
     # All columns beginning with target: define target parameters
-    # e.g. target:url
-    targetcols = 'target:url'
+    # e.g. target:url, target:table, etc
+    targetcols = [c for c in conf.columns if c.startswith('target:') and not c.endswith(':column')]
     # All columns beginning with source: define source parameters
     # e.g. source:url, source:table, etc
-    sourcecols = [col for col in config.columns if col.startswith('source:')]
+    sourcecols = [c for c in conf.columns if c.startswith('source:') and not c.endswith(':column')]
     # Transform columns
-    for target, targetframe in config.groupby(targetcols):
+    for target, targetframe in conf.groupby(targetcols):
         # Append results from each source into an array of dataframe
         result = []
         # Transform all source columns
@@ -21,16 +22,18 @@ def merge(configpath):
             source_args = {key.split(':')[1]: val for key, val in zip(sourcecols, source)}
             data = gramex.data.filter(**source_args)
             # Pick relevant columns
-            data = data[sourceframe['column'].values]
+            data = data[sourceframe['source:column'].values]
             for index, row in sourceframe.iterrows():
-                if row['column'] not in data.columns:
+                if row['source:column'] not in data.columns:
                     continue
                 if pd.notnull(row['default']):
-                    data[row['column']].fillna(row['default'], inplace=True)
-                if pd.notnull(row['target']):
-                    data.rename(columns={row['column']: row['target']}, inplace=True)
+                    data[row['source:column']].fillna(row['default'], inplace=True)
+                if pd.notnull(row['target:column']):
+                    data.rename(columns={row['source:column']: row['target:column']}, inplace=True)
             result.append(data)
         # Save into target column
         result = pd.concat(result, sort=False)
-        gramex.cache.save(result, target, callback='csv', index=False)
-    return {'merged': config[targetcols].drop_duplicates()}
+        target_args = {key.split(':')[1]: val for key, val in zip(targetcols, target)}
+        con = sa.create_engine(f'sqlite:///{target_args["url"]}')
+        result.to_sql(target_args['table'], con, if_exists='replace', index=False)
+    return {'merged': conf[targetcols].drop_duplicates()}

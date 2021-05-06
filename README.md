@@ -45,11 +45,13 @@ For example,, the first row:
 
 ![Mapping first row](assets/mapping-1.png)
 
-- ... saves into `result.csv`
 - ... from `sqlite:///system1.db` -- i.e. a SQLite database
 - ... from the `order` table
-- ... the column `PostingDate`
-- ... as the column `Date`
+- ... from the column `PostingDate`
+- ... into the database `sqlite:///result.db` -- i.e. SQLite database
+- ... into the `purchase` table
+- ... into the column `Date`
+- ... with no default value to be set
 
 The [result](result) looks like this:
 
