@@ -1,0 +1,41 @@
+url:
+  connector-merge:
+    pattern: /$YAMLURL/merge
+    handler: FunctionHandler
+    kwargs:
+      function: datasource.merge(r'$YAMLPATH/mapping.csv')
+      headers:
+        Content-Type: application/json
+
+  connector-result:
+    pattern: /$YAMLURL/result
+    handler: FormHandler
+    kwargs:
+      url: $YAMLPATH/result.csv
+      default: { _limit: 100, _format: html }
+
+  connector-mapping:
+    pattern: /$YAMLURL/mapping
+    handler: FormHandler
+    kwargs:
+      url: $YAMLPATH/mapping.csv
+      default: { _format: html }
+
+  connector-system1:
+    pattern: /$YAMLURL/system1
+    handler: FormHandler
+    kwargs:
+      url: sqlite:///$YAMLPATH/system1.db
+      table: order
+      default: { _limit: 100, _format: html }
+
+  connector-system2:
+    pattern: /$YAMLURL/system2
+    handler: FormHandler
+    kwargs:
+      url: sqlite:///$YAMLPATH/system2.db
+      table: purchase
+      default: { _limit: 100, _format: html }
+
+mime:
+  .db: application/octet-stream

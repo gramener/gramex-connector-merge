@@ -1,0 +1,4 @@
+system1.db filter=lfs diff=lfs merge=lfs -text
+system2.db filter=lfs diff=lfs merge=lfs -text
+mapping.csv filter=lfs diff=lfs merge=lfs -text
+result.csv filter=lfs diff=lfs merge=lfs -text
